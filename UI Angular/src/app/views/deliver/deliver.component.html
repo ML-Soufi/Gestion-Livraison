@@ -1,0 +1,161 @@
+<div class="card shadow-lg p-3 bg-body rounded mt-4">
+    <div class="card-header bg-primary">
+      <h5 style="color: white;">Gestion des livreurs</h5> 
+    </div>
+    <div class="card-body">
+        <div>
+            <button type="button" id="btnAddModal" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#addModal">+ Ajouter un livreur</button>
+        </div>
+        <div style="float: right;" class="mt-2 mb-2">
+          <input class="form-control" type="search" placeholder="Chercher ..." (input)="onSearchChange($event)" aria-label="Search">
+        </div>
+        <table class="table table-hover mt-4" style="max-width: 100%;">
+            <thead class="bg-primary text-white">
+              <tr>
+                <th>CNI</th>
+                <th>Nom Complet</th>
+                <th>Télèphone</th>
+                <th>Disponnibilité</th>
+                <th>Score</th>
+                <th>Options</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="delivers.length">
+              <tr *ngFor="let deliver of delivers">
+                  <td>{{ deliver.deliverCni }}</td>
+                  <td>{{ (deliver.lastName | uppercase) +' '+ deliver.firstName}}</td>
+                  <td>{{ deliver.deliverPhone }}</td>
+                  <td>
+                    <i *ngIf="!deliver.deliverState" style="color: gray; font-size: 24px;" class='bx bx-x'></i>
+                    <i *ngIf="deliver.deliverState" style="color: green; font-size: 24px;" class='bx bx-check'></i>
+                  </td>
+                  <td>
+                    <app-star [rating]="deliver.deliverRate"></app-star>
+                  </td>
+                  <td>
+                    <i (click)="updateDeliver(deliver.deliverId)" class='bx bxs-edit-location ml-5' style="color: orange; font-size: 24px;"></i>
+                    <i (click)="deleteDeliver(deliver.deliverId)" class='bx bxs-trash ml-5' style="color: red; font-size: 24px;"></i>
+                  </td>
+              </tr>
+            </tbody>
+        </table>
+        <div *ngIf="!delivers.length" class="alert alert-primary d-flex align-items-center" role="alert">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+          </svg>
+          <div>
+            Aucune données existent pour le moment ...
+          </div>
+        </div>
+        <nav *ngIf="delivers.length" aria-label="Page navigation example">
+          <ul class="pagination justify-content-center" >
+            <li class="page-item">
+              <a class="page-link" (click)="precedent()">Precécdent</a>
+            </li>
+            <li class="page-item" *ngFor="let pagination of paginationPages(pageNumbers); let i = index;" [ngClass]="(i+1 == currentPage) ? 'active' : ''">
+              <a class="page-link active"(click)="goToSpesificPage(i+1, $event)">{{ i + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" (click)="suivant()">Suivant</a>
+            </li>
+          </ul>
+        </nav>
+        <!-- add Modal -->
+        <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form [formGroup]="formGroup" (submit)="addDeliver()">
+              <div class="modal-header">
+                <h5 *ngIf="!isUpdateModal" class="modal-title" id="staticBackdropLabel">Ajouter un livreur</h5>
+                <h5 *ngIf="isUpdateModal" class="modal-title" id="staticBackdropLabel">Editer un livreur</h5>
+                <button type="reset" (click)="onModalClose()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                      <label *ngIf="!isUpdateModal">Tapez le cni :</label>
+                      <label *ngIf="isUpdateModal">Editez le cni :</label>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control" formControlName="deliverCni"  placeholder="Enter le cni">
+                        <div *ngIf="formGroup.get('deliverCni')?.invalid && (formGroup.get('deliverCni')?.touched || formGroup.get('deliverCni')?.dirty)">
+                          <span pan style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverCni')?.getError('required')">Ce champs est obligatoire !</span>
+                          <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverCni')?.getError('maxlength')">Ce champs est très long !</span>
+                          <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverCni')?.getError('pattern')">Ce champs n'est pas valid !</span>
+                        </div>
+                    </div>
+                    <div class="col-6 mt-2">
+                      <label *ngIf="!isUpdateModal">Tapez le nom :</label>
+                      <label *ngIf="isUpdateModal">Editez le nom :</label>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <label *ngIf="!isUpdateModal">Tapez le prénom :</label>
+                        <label *ngIf="isUpdateModal">Editez le prénom :</label>
+                    </div>
+                    <div class="col-6">
+                      <input type="text" class="form-control" formControlName="lastName"  placeholder="Enter le nom">
+                      <div *ngIf="formGroup.get('lastName')?.invalid && (formGroup.get('lastName')?.touched || formGroup.get('lastName')?.dirty)">
+                        <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('lastName')?.getError('required')">Ce champs est obligatoire !</span>
+                        <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('lastName')?.getError('maxlength')">Ce champs est très long !</span>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <input type="text" class="form-control" formControlName="firstName" placeholder="Enter le prénom">
+                      <div *ngIf="formGroup.get('firstName')?.invalid && (formGroup.get('firstName')?.touched || formGroup.get('firstName')?.dirty)">
+                        <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('firstName')?.getError('required')">Ce champs est obligatoire !</span>
+                        <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('firstName')?.getError('maxlength')">Ce champs est très long !</span>
+                      </div>
+                    </div>
+                    <div class="col-12 mt-2">
+                      <label *ngIf="!isUpdateModal">Tapez l'email :</label>
+                      <label *ngIf="isUpdateModal">Editez l'email :</label>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control" formControlName="deliverEmail"  placeholder="Enter l'émail">
+                        <div *ngIf="formGroup.get('deliverEmail')?.invalid && (formGroup.get('deliverSex')?.touched || formGroup.get('deliverEmail')?.dirty)">
+                          <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverEmail')?.getError('required')">Ce champs est obligatoire !</span>
+                          <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverEmail')?.getError('maxlength')">Ce champs est très long !</span>
+                          <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverEmail')?.getError('email')">Ce champs n'est pas valid  !</span>
+                        </div>
+                    </div>
+                    <div class="col-6 mt-2">
+                      <label *ngIf="!isUpdateModal">Tapez le télèphone :</label>
+                      <label *ngIf="isUpdateModal">Editez le télèphone :</label>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <label *ngIf="!isUpdateModal">Tapez le sexe :</label>
+                        <label *ngIf="isUpdateModal">Editez le sexe :</label>
+                    </div>
+                    <div class="col-6">
+                      <input type="text" class="form-control" formControlName="deliverPhone"  placeholder="Enter le télèphone">
+                      <div *ngIf="formGroup.get('deliverPhone')?.invalid && (formGroup.get('deliverPhone')?.touched || formGroup.get('deliverPhone')?.dirty)">
+                        <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverPhone')?.getError('required')">Ce champs est obligatoire !</span>
+                        <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverPhone')?.getError('maxlength')">Ce champs est très long !</span>
+                        <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverPhone')?.getError('pattern')">Ce champs n'est pas valid !</span>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <select class="form-select" formControlName="deliverSex" style="width: 100%;">
+                        <option selected>Choisir le sexe ...</option>
+                        <option value="m">Homme</option>
+                        <option value="f">Femme</option>
+                      </select>
+                      <div *ngIf="formGroup.get('deliverSex')?.invalid && (formGroup.get('deliverSex')?.touched || formGroup.get('deliverSex')?.dirty)">
+                        <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverSex')?.getError('required')">Ce champs est obligatoire !</span>
+                        <span style="font-size: 14px;" class="text-danger" *ngIf="formGroup.get('deliverSex')?.getError('pattern')">Ce champs n'est pas valid !</span>
+                      </div>
+                    </div>
+              </div>
+              </div>
+              <div class="modal-footer">
+                <button *ngIf="!isUpdateModal" [disabled]="formGroup.invalid" type="submit" class="btn btn-success">Ajouter</button>
+                <button *ngIf="isUpdateModal" [disabled]="formGroup.invalid" type="submit" class="btn btn-warning">Editer</button>
+                <button type="reset" (click)="onModalClose()" id="closeButton" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://localhost:3306/mabase
+    username: root
+    password: 123
+  application:
+    name: USER-SERVICE
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

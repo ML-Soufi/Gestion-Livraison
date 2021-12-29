@@ -1,0 +1,83 @@
+<div class="sidebar close">
+  <div class="logo-details">
+    <i class='bx bxs-truck'></i>
+    <span class="logo_name">Livraison</span>
+  </div>
+  <ul class="nav-links">
+    <li>
+      <a routerLink="/Dashboard">
+        <i class='bx bx-grid-alt'></i>
+        <span class="link_name">Dashboard</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" routerLink="/Dashboard">Dashboard</a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="iocn-link">
+        <a routerLink="/Dashboard/Products">
+          <i class='bx bx-package'></i>
+          <span class="link_name">Produits</span>
+        </a>
+      </div>
+      <ul class="sub-menu">
+        <li><a class="link_name" routerLink="/Dashboard/Orders">Produits</a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="iocn-link">
+        <a routerLink="/Dashboard/Orders">
+          <i class='bx bxs-package'></i>
+          <span class="link_name">Commandes</span>
+        </a>
+        <i class='bx bxs-chevron-down arrow' (click)="showSubMenu($event)"></i>
+      </div>
+      <ul class="sub-menu">
+        <li><a class="link_name" routerLink="/Dashboard/Orders">Commandes</a></li>
+        <li><a href="#">Ajouter commande</a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="iocn-link">
+        <a routerLink="/Dashboard/Users">
+          <i class='bx bxs-user-circle'></i>
+          <span class="link_name">Utilisateurs</span>
+        </a>
+      </div>
+      <ul class="sub-menu">
+        <li><a class="link_name" routerLink="/Dashboard/Users">Utilisateurs</a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="iocn-link">
+        <a routerLink="/Dashboard/Delivers">
+          <i class='bx bx-cycling'></i>
+          <span class="link_name">Livreurs</span>
+        </a>
+      </div>
+      <ul class="sub-menu">
+        <li><a class="link_name" routerLink="/Dashboard/Delivers">Livreurs</a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="profile-details">
+        <div class="profile-content">
+          <img src="../../../assets/images/profile.jpg" alt="">
+        </div>
+        <div class="name-job">
+          <div class="profile_name">{{ fullName }}</div>
+          <div class="job">{{ role }}</div>
+        </div>
+        <i class='bx bx-log-out' (click)="logOut()"></i>
+      </div>
+    </li>
+  </ul>
+</div>
+<section class="home-section">
+  <div class="home-content">
+    <i class='bx bx-menu' (click)="toggleSideBar()"></i>
+  </div>
+  <div class="dynamique-section mb-4">
+    <router-outlet></router-outlet>
+  </div>
+</section>
