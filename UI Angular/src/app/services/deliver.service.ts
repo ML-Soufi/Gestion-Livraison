@@ -22,6 +22,10 @@ export class DeliverService {
     return this.http.post(`${environment.apiUrl}`+"/DELIVER-SERVICE/", data);
   }
 
+  updateDeliver(data1 : any, data2 : any): Observable<any>{
+    return this.http.put(`${environment.apiUrl}`+"/DELIVER-SERVICE/"+data1, data2);
+  }
+
   deleteDeliver(data :any): Observable<any>{
     return this.http.delete(`${environment.apiUrl}`+"/DELIVER-SERVICE/"+data)
   }

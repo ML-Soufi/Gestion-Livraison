@@ -17,6 +17,7 @@ export class DeliverComponent implements OnInit {
   
   formGroup !: FormGroup;
   delivers : Deliver[] = [];
+  formData : FormData = new FormData();
   deliver !: Deliver;
   pageNumbers : number = 0;
   currentPage : number = 1;
@@ -69,6 +70,7 @@ export class DeliverComponent implements OnInit {
         document.getElementById('closeButton')?.click();
         this.clearForm();
         this.delivers.push(res)
+        this.toastr.success("Un livreur est ajouté.", "", {timeOut: 3500})
       }
     );
   }
@@ -89,10 +91,48 @@ export class DeliverComponent implements OnInit {
     }
   }
 
-  // this methode to update a Deliver
-  updateDeliver(data : any){
+  // this methode to show Update Modal
+  clickUpdateDeliver(data : any){
     this.isUpdateModal = !this.isUpdateModal;
     document.getElementById('btnAddModal')?.click();
+    this.delivers.filter((d : Deliver) =>{
+      if(d.deliverId == data)
+        this.deliver = d;
+    });
+    this.formGroup.get('deliverCni')?.setValue(this.deliver.deliverCni);
+    this.formGroup.get('firstName')?.setValue(this.deliver.firstName);
+    this.formGroup.get('lastName')?.setValue(this.deliver.lastName);
+    this.formGroup.get('deliverSex')?.setValue(this.deliver.deliverSex);
+    this.formGroup.get('deliverPhone')?.setValue(this.deliver.deliverPhone);
+    this.formGroup.get('deliverEmail')?.setValue(this.deliver.deliverEmail);
+  }
+
+  // this methode to update a Deliver
+  updateDeliver(){
+    if(this.deliver.deliverCni == this.formGroup.get('deliverCni')?.value && this.deliver.firstName == this.formGroup.get('firstName')?.value && 
+        this.deliver.lastName == this.formGroup.get('lastName')?.value && this.deliver.deliverSex == this.formGroup.get('deliverSex')?.value &&
+        this.deliver.deliverPhone == this.formGroup.get('deliverPhone')?.value && this.deliver.deliverEmail == this.formGroup.get('deliverEmail')?.value){
+          document.getElementById('closeButton')?.click();
+          this.toastr.info("Aucune mise à jour est faite.", "", {timeOut: 3500})
+    }else{
+      this.deliverService.updateDeliver(this.deliver.deliverId, this.formGroup.value).subscribe(
+        res=>{
+          this.delivers.filter((d : Deliver) =>{
+            if(d.deliverId == this.deliver.deliverId){
+               d.deliverCni=res.deliverCni;
+               d.firstName=res.firstName;
+               d.lastName=res.lastName;
+               d.deliverSex=res.deliverSex;
+               d.deliverPhone=res.deliverPhone;
+               d.deliverEmail=res.deliverEmail;
+            }
+              
+          });
+        }
+      );
+      document.getElementById('closeButton')?.click();
+      this.toastr.success("Le livreur est mise à jour.", "", {timeOut: 3500})
+    }
   }
 
   // thise methode to delete Deliver

@@ -33,7 +33,7 @@
                     <app-star [rating]="deliver.deliverRate"></app-star>
                   </td>
                   <td>
-                    <i (click)="updateDeliver(deliver.deliverId)" class='bx bxs-edit-location ml-5' style="color: orange; font-size: 24px;"></i>
+                    <i (click)="clickUpdateDeliver(deliver.deliverId)" class='bx bxs-edit-location ml-5' style="color: orange; font-size: 24px;"></i>
                     <i (click)="deleteDeliver(deliver.deliverId)" class='bx bxs-trash ml-5' style="color: red; font-size: 24px;"></i>
                   </td>
               </tr>
@@ -64,7 +64,7 @@
         <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
-              <form [formGroup]="formGroup" (submit)="addDeliver()">
+              <form [formGroup]="formGroup" (submit)="(!isUpdateModal)? addDeliver() : updateDeliver()">
               <div class="modal-header">
                 <h5 *ngIf="!isUpdateModal" class="modal-title" id="staticBackdropLabel">Ajouter un livreur</h5>
                 <h5 *ngIf="isUpdateModal" class="modal-title" id="staticBackdropLabel">Editer un livreur</h5>

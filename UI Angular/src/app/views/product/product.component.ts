@@ -56,8 +56,6 @@ export class ProductComponent implements OnInit {
 
   // this Methode to add New Product
   addProduct(){
-    this.formData.append('product', JSON.stringify(this.formGroup.value));
-    this.formData.append('file', this.file);
     this.productService.addProduct(this.formData).subscribe(
       res=> {
         document.getElementById('closeButton')?.click();
