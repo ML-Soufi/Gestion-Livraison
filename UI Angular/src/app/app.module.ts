@@ -17,6 +17,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StarComponent } from './views/star/star.component';
 import { DeliverComponent } from './views/deliver/deliver.component';
+import { AddOrderComponent } from './views/add-order/add-order.component';
+import { NbThemeModule,  } from '@nebular/theme';
+
 
 @NgModule({
   declarations: [
@@ -29,7 +32,8 @@ import { DeliverComponent } from './views/deliver/deliver.component';
     OrderComponent,
     UserComponent,
     StarComponent,
-    DeliverComponent
+    DeliverComponent,
+    AddOrderComponent
   ],
   imports: [
     BrowserModule,
@@ -38,8 +42,8 @@ import { DeliverComponent } from './views/deliver/deliver.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    ToastrModule.forRoot()
-
+    ToastrModule.forRoot(),
+    NbThemeModule.forRoot({ name: 'default' }),
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

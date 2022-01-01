@@ -55,7 +55,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         // Allow refreshToken EndPoint without Authentication
         http.authorizeRequests().antMatchers(HttpMethod.GET,"/users/v1/refreshToken").permitAll();
-
         //http.authorizeRequests().antMatchers(HttpMethod.POST,"/users/v1/login").authenticated();
         http.authorizeRequests().anyRequest().authenticated();
         // to indicated Stateless authentication

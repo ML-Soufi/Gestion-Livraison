@@ -1,3 +1,4 @@
+import { AddOrderComponent } from './views/add-order/add-order.component';
 import { DeliverComponent } from './views/deliver/deliver.component';
 import { OrderComponent } from './views/order/order.component';
 import { UserComponent } from './views/user/user.component';
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path:"Dashboard", component: DashboardComponent, children : [
     { path:"", component: HomeComponent, canActivate : [AuthGuard]},
     { path:"Products", component: ProductComponent, canActivate : [AuthGuard]},  
-    { path:"Orders", component: OrderComponent, canActivate : [AuthGuard]},
+    { path:"Orders", component: OrderComponent, canActivate : [AuthGuard],},
+    { path: "Orders/AddOrder", component: AddOrderComponent, canActivate : [AuthGuard], },
     { path:"Users", component: UserComponent, canActivate : [AuthGuard]},
     { path:"Delivers", component: DeliverComponent, canActivate : [AuthGuard]},
   ], canActivate : [AuthGuard]}, // canActivate : [AuthGuard]
